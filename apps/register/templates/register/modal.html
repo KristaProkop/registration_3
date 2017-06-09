@@ -1,0 +1,22 @@
+{% extends 'register/base.html' %}
+
+{% block modal_heading %}
+    <h2>{{heading}}</h2>
+    <p>{{subheading}}</p>
+{% endblock %}
+    
+{% block form %}
+    
+
+    <form class="login-form" action="{% url 'register:register' %}" method="POST">
+      {% csrf_token %}
+      
+      {{form.as_p}}
+
+      {% block button %}
+        <button>Submit</button>
+      {% endblock %}
+
+    </form>
+
+{% endblock %}
