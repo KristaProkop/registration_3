@@ -7,18 +7,20 @@
     
 {% block form %}
     
+  
 
-    <form class="login-form" action="{% url 'register:register' %}" method="POST">
+    <form class="login-form" action="{% url 'register:myView' string_path=string_path %}" method="POST">
       {% csrf_token %}
-      
-    
+
       {{user_form.as_p}}
       {{credit_card_form.as_p}}
       
+
       {% block button %}
-        <button>Submit</button>
+      <button>Submit</button>
       {% endblock %}
 
+      <p class="message">Already a subscriber? <a href="#">Sign in</a></p>
     </form>
 
 {% endblock %}

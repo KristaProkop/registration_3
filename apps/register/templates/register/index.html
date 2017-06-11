@@ -14,13 +14,14 @@
 <body>
 <div class="login-page">
   <!-- Trigger/Open The Modal -->
-  <a class="btn btn-primary" href="{% url 'register:modal' string='tmobile' %}">Tmobile</a>
-  <a class="btn btn-primary" href="{% url 'register:modal' string='amex/' %}">Amex</a>
-  <a class="btn btn-primary" href="{% url 'register:modal' string='some/other/path' %}">Default (any non-defined path)</a>
+  <a class="btn btn-primary" href="{% url 'register:myView' string='tmobile' %}">Tmobile</a>
+  <a class="btn btn-primary" href="{% url 'register:myView' string='amex/' %}">Amex</a>
+  <a class="btn btn-primary" href="{% url 'register:myView' string='some/other/path' %}">Default (any non-defined path)</a>
 
 
 </div>
   
+
 
 </body>
 </html>
