@@ -37,18 +37,29 @@ def MainForm(field_list, *args, **kwargs):
                 if len(first_name) < 2:
                     self.add_error('first_name', "Name must be 2 or more characters" )
 
+
             if 'last_name' in field_list:
                 last_name = cleaned_data.get('last_name')
                 if len(last_name) < 2:
                     self.add_error('last_name', "Name must be 2 or more characters" )
+
             
             if 'password' in field_list:
                 password = cleaned_data.get('password')         
                 if len(password) < 8:
                     self.add_error('password', "Password must be 8 or more characters" )
-
                
             return self.cleaned_data
+
+
+        def save(self, commit=True):
+            user = super(MainForm, self).save(commit=False)
+            user.email = self.cleaned_data["email"]
+             # write email to username
+            user.username = user.email
+            if commit:
+                user.save()
+            return user
 
         def __init__(self):
             super(MainForm, self).__init__(*args, **kwargs)
@@ -62,9 +73,6 @@ def CreditCardForm(field_list, *args, **kwargs):
         class Meta:
             model = CreditCard
             fields = field_list
-
-        def __init__(self):
-            super(CreditCardForm, self).__init__(*args, **kwargs)
 
         def clean(self):
             cleaned_data = self.cleaned_data
@@ -83,6 +91,17 @@ def CreditCardForm(field_list, *args, **kwargs):
                     self.add_error('expiry', "Enter a valid expiration date")
                
             return self.cleaned_data
-    
+
+        def save(self, user, commit=True):
+            credit_card = super(CreditCardForm, self).save(commit=False)
+            credit_card.user = user
+            if commit:
+                credit_card.save()
+            return credit_card
+
+  
+        def __init__(self):
+            super(CreditCardForm, self).__init__(*args, **kwargs)
+
     return CreditCardForm() 
 
