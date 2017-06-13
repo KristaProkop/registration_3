@@ -12,6 +12,7 @@ from datetime import datetime
 
 def MainForm(field_list, *args, **kwargs):
     class MainForm(forms.ModelForm):
+        # password fields must be password widgets
         if 'password' in field_list:
             password = forms.CharField(widget=forms.PasswordInput())
 
@@ -19,17 +20,29 @@ def MainForm(field_list, *args, **kwargs):
             model = User
             fields = field_list
 
-        def clean(self):
-            cleaned_data = self.cleaned_data
+        def clean_first_name(self):
+            # names must be 2 or more chars with no digits
+            self.cleaned_data['first_name'] = self.cleaned_data['first_name'].title()
 
-            if 'email' in field_list:
-                #  check if user exists, the check if email regex match
-                try:
-                    user = User.objects.get(username=cleaned_data['email'])
-                    self.add_error('email', "Account already exists! Please log in instead")
-                except:
-                    pass
-                        # Django email field already validates email pattern
+            first_name = self.cleaned_data['first_name']
+            if len(first_name) < 2:
+                self.add_error('first_name', "Name must be 2 or more characters" )
+            if any(char.isdigit() for char in first_name):
+                self.add_error('first_name', 'Name cannot contain numbers')
+            return first_name
+
+        def clean_last_name(self):
+            self.cleaned_data['last_name'] = self.cleaned_data['last_name'].title()
+            last_name = self.cleaned_data['last_name']
+
+            if len(last_name) < 2:
+                self.add_error('last_name', "Name must be 2 or more characters" )
+            if any(char.isdigit() for char in last_name):
+                self.add_error('last_name', 'Name cannot contain numbers')
+            return last_name
+
+        def clean_email(self):
+             # Django email field already validates email pattern
 
                         # email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
@@ -37,26 +50,26 @@ def MainForm(field_list, *args, **kwargs):
 
                         # if not email_regex.match(email):
                         #     self.add_error('email', "Invalid email address" )
+            email = self.cleaned_data['email']
+            try:
+                user = User.objects.get(username=email)
+                self.add_error('email', "Account already exists! Please log in instead")
+            except: 
+                return email
 
-            #validate names
-            if 'first_name' in field_list:
-                first_name = cleaned_data.get('first_name')
-                if len(first_name) < 2:
-                    self.add_error('first_name', "Name must be 2 or more characters" )
-
-
-            if 'last_name' in field_list:
-                last_name = cleaned_data.get('last_name')
-                if len(last_name) < 2:
-                    self.add_error('last_name', "Name must be 2 or more characters" )
-
+        def clean_password(self):
+            # password must be 8 or more char with one letter and one number
+            password = self.cleaned_data['password']
             
-            if 'password' in field_list:
-                password = cleaned_data.get('password')         
-                if len(password) < 8:
-                    self.add_error('password', "Password must be 8 or more characters" )
-               
-            return self.cleaned_data
+            if len(password) < 8 or not (any(char.isdigit() for char in password)) or not (any(char.isalpha() for char in password)):
+                self.add_error('password', "Password must be 8 or more characters and must contain at least 1 letter and 1 number" )
+
+            # if form contains "confirm password field", check for match with password
+            if 'conf_password' in self.cleaned_data:
+                conf_password = self.cleaned_data['conf_password']
+                if password != conf_password:
+                    self.add_error('password', "Passwords must match")
+            return password
 
 
         # override save function to assign email as username, as username is required for django authentication
@@ -68,6 +81,7 @@ def MainForm(field_list, *args, **kwargs):
             if commit:
                 user.save()
             return user
+            
 
         def __init__(self):
             super(MainForm, self).__init__(*args, **kwargs)
