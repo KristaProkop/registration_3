@@ -89,7 +89,9 @@
   text-decoration: none;
 }
 
-
+.errorlist {
+  color: red;
+}
 
 a {
   color: white;

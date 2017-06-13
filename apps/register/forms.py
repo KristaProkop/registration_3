@@ -2,9 +2,13 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Users, CreditCard #CustomUser
+
+from .models import User, CreditCard #CustomUser
 
 import re
+from datetime import datetime
+
+
 
 def MainForm(field_list, *args, **kwargs):
     class MainForm(forms.ModelForm):
@@ -12,21 +16,20 @@ def MainForm(field_list, *args, **kwargs):
             password = forms.CharField(widget=forms.PasswordInput())
 
         class Meta:
-            model = Users
+            model = User
             fields = field_list
-
-        def __init__(self):
-            super(MainForm, self).__init__(*args, **kwargs)
 
         def clean(self):
             cleaned_data = self.cleaned_data
-            
+
             #validate email address
-            if 'email' in field_list:
-                email_regex = re.compile(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]*$')
-                email = cleaned_data.get("email")
-                if not email_regex.match(email):
-                    self.add_error('email', "Invalid email address" )
+            # if 'email' in field_list:
+            #     email_regex = re.compile(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]*$')
+
+            #     email = str(self.fields['email'])
+
+            #     if not email_regex.match(email):
+            #         self.add_error('email', "Invalid email address" )
 
             #validate names
             if 'first_name' in field_list:
@@ -47,6 +50,10 @@ def MainForm(field_list, *args, **kwargs):
                
             return self.cleaned_data
 
+        def __init__(self):
+            super(MainForm, self).__init__(*args, **kwargs)
+
+
     return MainForm()
 
 
@@ -58,10 +65,24 @@ def CreditCardForm(field_list, *args, **kwargs):
 
         def __init__(self):
             super(CreditCardForm, self).__init__(*args, **kwargs)
+
+        def clean(self):
+            cleaned_data = self.cleaned_data
+
+            # if card is required, validate card number length and expiration date.
+            # TODO: implement Luhn algo to validate numbers and card providers
+
+            if 'card_num' in field_list:
+                card_num = cleaned_data.get("card_num")
+                expiry = cleaned_data.get("expiry")
+
+                if not len(card_num) == 15:
+                    self.add_error('card_num', "Enter a valid Amex number")
+
+                if not expiry > datetime.today().date():
+                    self.add_error('expiry', "Enter a valid expiration date")
+               
+            return self.cleaned_data
     
     return CreditCardForm() 
 
-# class CustomUserForm(forms.ModelForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['test']
