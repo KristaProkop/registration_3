@@ -1,5 +1,9 @@
 {% extends 'register/base.html' %}
 
+
+{% if request.user.is_authenticated %}Welcome {{ request.user.username }}
+{% endif %}
+
 {% block content %}
     <h2 >Homepage!</h2>
 {% endblock %}

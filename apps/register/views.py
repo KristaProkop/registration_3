@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
-from .models import User #CustomUser
-from .forms import MainForm, CreditCardForm #CustomUserForm
+from django.contrib.auth import login
+
+from .models import User
+from .forms import MainForm, CreditCardForm
 
 #formdict.py contains lookup values for form fields and urls
 from .formdict import FORMDICT, URLSDICT
@@ -39,6 +41,7 @@ def myView(request, **string_path):
             # only if credit card fields are included on the form, save the cc form
             if len(credit_card_fields) > 0:
                 credit_card_form.save(user=new_user)
+            login(request, new_user)
             return redirect('/')
             
 

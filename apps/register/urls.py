@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^modals/(?P<string_path>[\w\-]+)/',views.myView, name="myView"),
+    url(r'^(?P<string_path>[\w\-]+)/',views.myView, name="myView"),
 ]

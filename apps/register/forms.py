@@ -22,14 +22,21 @@ def MainForm(field_list, *args, **kwargs):
         def clean(self):
             cleaned_data = self.cleaned_data
 
-            #validate email address
-            # if 'email' in field_list:
-            #     email_regex = re.compile(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]*$')
+            if 'email' in field_list:
+                #  check if user exists, the check if email regex match
+                try:
+                    user = User.objects.get(username=cleaned_data['email'])
+                    self.add_error('email', "Account already exists! Please log in instead")
+                except:
+                    pass
+                        # Django email field already validates email pattern
 
-            #     email = str(self.fields['email'])
+                        # email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
-            #     if not email_regex.match(email):
-            #         self.add_error('email', "Invalid email address" )
+                        # email = cleaned_data['email']
+
+                        # if not email_regex.match(email):
+                        #     self.add_error('email', "Invalid email address" )
 
             #validate names
             if 'first_name' in field_list:
@@ -52,10 +59,11 @@ def MainForm(field_list, *args, **kwargs):
             return self.cleaned_data
 
 
+        # override save function to assign email as username, as username is required for django authentication
         def save(self, commit=True):
             user = super(MainForm, self).save(commit=False)
             user.email = self.cleaned_data["email"]
-             # write email to username
+             # make email username
             user.username = user.email
             if commit:
                 user.save()
@@ -63,6 +71,9 @@ def MainForm(field_list, *args, **kwargs):
 
         def __init__(self):
             super(MainForm, self).__init__(*args, **kwargs)
+            for field in self.fields:
+                self.fields[field].widget.attrs['placeholder'] = self.fields[field].label   
+                self.fields[field].label = False
 
 
     return MainForm()
@@ -93,6 +104,7 @@ def CreditCardForm(field_list, *args, **kwargs):
             return self.cleaned_data
 
         def save(self, user, commit=True):
+            # override save function to attach user to credit card record
             credit_card = super(CreditCardForm, self).save(commit=False)
             credit_card.user = user
             if commit:
@@ -102,6 +114,12 @@ def CreditCardForm(field_list, *args, **kwargs):
   
         def __init__(self):
             super(CreditCardForm, self).__init__(*args, **kwargs)
+            # Remove form label and add placeholder for each field
+            for field in self.fields:
+                self.fields[field].widget.attrs['placeholder'] = self.fields[field].label   
+                self.fields[field].label = False
+
+
 
     return CreditCardForm() 
 

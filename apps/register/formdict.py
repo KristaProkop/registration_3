@@ -25,10 +25,10 @@ FORMDICT = {
         "heading": "Create your ShopRunner login.",
         "subheading": "You will use the email address below to sign in when you see the ShopRunner logo at top online retailers.",
         },
-}    
+}   
 
 URLSDICT = {
-  '/modals/amex/': FORMDICT['amex'],
-  '/modals/tmobile/': FORMDICT['tmobile'],
+  '/amex/': FORMDICT['amex'],
+  '/tmobile/': FORMDICT['tmobile'],
 }
 
