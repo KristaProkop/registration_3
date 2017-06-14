@@ -1,10 +1,16 @@
 {% extends 'register/base.html' %}
 
 
-{% if request.user.is_authenticated %}Welcome {{ request.user.username }}
-{% endif %}
 
 {% block content %}
+
     <h2 >Homepage!</h2>
+    
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.get_username }}. Thanks for registering.</p>
+    {% else %}
+    <p>Welcome, new user. Please log in.</p>
+    {% endif %}
+    
 {% endblock %}
  

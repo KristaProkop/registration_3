@@ -7,11 +7,12 @@ from django.contrib.auth import login
 from .models import User
 from .forms import MainForm, CreditCardForm
 
-#formdict.py contains lookup values for form fields and urls
-from .formdict import FORMDICT, URLSDICT
+#config.py contains lookup values for form fields and urls
+from .config import FORMDICT, URLSDICT
 
 
 def index(request):
+    print request.user
     return render(request, 'register/index.html')
 
 

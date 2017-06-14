@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 
-from .models import User, CreditCard #CustomUser
+from .models import User, CreditCard 
 
 import re
 from datetime import datetime
@@ -14,7 +14,7 @@ def MainForm(field_list, *args, **kwargs):
     class MainForm(forms.ModelForm):
         # password fields must be password widgets
         if 'password' in field_list:
-            password = forms.CharField(widget=forms.PasswordInput())
+            password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
         class Meta:
             model = User
@@ -76,12 +76,11 @@ def MainForm(field_list, *args, **kwargs):
         def save(self, commit=True):
             user = super(MainForm, self).save(commit=False)
             user.email = self.cleaned_data["email"]
-             # make email username
             user.username = user.email
             if commit:
                 user.save()
             return user
-            
+
 
         def __init__(self):
             super(MainForm, self).__init__(*args, **kwargs)
@@ -89,6 +88,8 @@ def MainForm(field_list, *args, **kwargs):
                 self.fields[field].widget.attrs['placeholder'] = self.fields[field].label   
                 self.fields[field].label = False
 
+                # TODO: Pass argument for custom class field 
+                # self.fields[field].widget.attrs['class'] = 'my_class'
 
     return MainForm()
 
