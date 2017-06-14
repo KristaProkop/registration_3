@@ -1,0 +1,47 @@
+************************
+GIVEN as an unauthenticated user
+WHEN I go to '/'
+THEN I should see a modal form containing first_name, last_name, email, password, and credit card inputs
+
+GIVEN as an unauthenticated user
+WHEN I go to '/tmobile/'
+THEN I should see a modal form containing first_name, last_name, email, and password inputs
+
+GIVEN as an unauthenticated user
+WHEN I go to '/amex/'
+THEN I should see a modal form containing first_name, last_name, email, password, and credit card inputs
+
+GIVEN as an unauthenticated user
+WHEN I fill out a registration form and click 'signup'
+THEN The form is processed, the user is added to the database and logged in, and the user is sent to '/'
+
+GIVEN as an unauthenticated user
+WHEN I fill out a registration form incorrectly and click "signup"
+THEN The form validation results render in-line
+
+************VALIDATION********
+GIVEN a registration form is submitted
+WHEN first_name or last_name field contains less than 2 characters each OR contain digits
+THEN Validation rules raise an error
+
+GIVEN a registration form is submitted
+WHEN the email fields does not match email pattern
+THEN Validation rules raise an error
+
+GIVEN a registration form is submitted
+WHEN the password field contains less than 8 characters
+THEN Validation rules raise an error
+
+GIVEN a registration form is submitted
+WHEN the credit card field contains less than 15 characters
+THEN Validation rules raise an error
+<!-- NEED TO CUSTOMIZE PER CARD TYPE! -->
+
+
+
+
+
+
+
+
+

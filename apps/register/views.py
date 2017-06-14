@@ -18,7 +18,7 @@ def index(request):
 
 def myView(request, **string_path):
     path = request.path
-    
+
     #If path is not in the URLSDICT, use 'default' settings in FORMSDICT
     if path in URLSDICT:
         lookup_path = URLSDICT[path]
@@ -51,7 +51,9 @@ def myView(request, **string_path):
         'credit_card_form': credit_card_form,
         'heading': lookup_path['heading'],
         'subheading': lookup_path['subheading'],
+        'button_text': lookup_path['button_text'],
         'string_path': string_path['string_path'],
+
     }
 
     return render(request, 'register/modal.html', context)

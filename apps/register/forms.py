@@ -100,22 +100,40 @@ def CreditCardForm(field_list, *args, **kwargs):
             model = CreditCard
             fields = field_list
 
+        # TODO: add logic for card types!!
+        def clean_card_num(self):
+            card_num = self.cleaned_data['card_num']
+            if len(str(card_num)) < 15:
+                self.add_error('card_num', "Enter a valid card number") 
+
+            # Implements Luhn algorithm which checks to make sure that the card is a valid number.
+            sum = 0
+            num_digits = len(str(card_num))
+            oddeven = num_digits & 1
+            for count in range(0, num_digits):
+                digit = int(card_num[count])
+
+                if not (( count & 1 ) ^ oddeven ):
+                    digit = digit * 2
+                if digit > 9:
+                    digit = digit - 9
+
+                sum = sum + digit
+            
+            if ( (sum % 10) == 0 ):
+                # TODO: Add card number encryption!
+                return card_num
+            else:
+                self.add_error('card_num', "Enter a valid card number") 
+
+
         def clean(self):
             cleaned_data = self.cleaned_data
-
-            # if card is required, validate card number length and expiration date.
-            # TODO: implement Luhn algo to validate numbers and card providers
-
-            if 'card_num' in field_list:
-                card_num = cleaned_data.get("card_num")
+            # TODO: Fix credit card field date format
+            if 'expiry' in field_list:
                 expiry = cleaned_data.get("expiry")
-
-                if not len(card_num) == 15:
-                    self.add_error('card_num', "Enter a valid Amex number")
-
                 if not expiry > datetime.today().date():
                     self.add_error('expiry', "Enter a valid expiration date")
-               
             return self.cleaned_data
 
         def save(self, user, commit=True):

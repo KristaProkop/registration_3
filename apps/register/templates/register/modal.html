@@ -3,7 +3,7 @@
 {% block content %}
   <button id="myBtn">Re-open Modal</button>
 
-  <div id="myModal" class="modal">
+  <div id="myModal" class="modal {{class_name}}">
     <div class="form">
       <div class="modal-content">
         <span class="close">&times;</span>
@@ -16,7 +16,7 @@
           {{credit_card_form.as_p}}
           
 
-          <button name="register">Submit</button>
+          <button name="register">{{button_text}}</button>
 
           <p class="message">Already on ShopRunner? <a href="#">Sign in</a></p>
         </form>

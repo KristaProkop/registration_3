@@ -21,7 +21,7 @@ class TmobileTestCase(LiveServerTestCase):
     def test_register(self):
         selenium = self.selenium
         #Opening the link we want to test
-        selenium.get('http://127.0.0.1:8000/modals/tmobile/')
+        selenium.get('http://127.0.0.1:8000/tmobile/')
         #find the form element
         first_name = selenium.find_element_by_id('id_first_name')
         last_name = selenium.find_element_by_id('id_last_name')
